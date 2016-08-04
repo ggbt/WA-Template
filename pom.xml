@@ -1,0 +1,61 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.oxygenxml</groupId>
+  <artifactId>webauthor-template</artifactId>
+  <version>18.0.1</version>
+  <packaging>war</packaging>
+  <name>oXygen XML Web Author Template</name>
+  <description>Template used to simplify the development of customisations for oXygen XML Web Author</description>
+
+  <properties>
+    <oxygen.sdk.version>18.0-SNAPSHOT</oxygen.sdk.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.oxygenxml</groupId>
+      <artifactId>oxygen-webapp</artifactId>
+      <version>${oxygen.sdk.version}</version>
+      <type>war</type>
+      <scope>runtime</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <overlays>
+
+            <overlay>
+              <groupId>com.oxygenxml</groupId>
+              <artifactId>oxygen-webapp</artifactId>
+
+              <!-- We exclude the default frameworks, plugins and
+                   options because not all of them are web author compatible.
+                   We will instead retrieve them from webapp-ready-to-go -->
+              <excludes>
+                <exclude>**/WEB-INF/options.zip</exclude>
+                <exclude>**/WEB-INF/frameworks.zip</exclude>
+                <exclude>**/WEB-INF/plugins.zip</exclude>
+              </excludes>
+            </overlay>
+
+            <overlay>
+              <!-- empty groupId/artifactId represents the current build -->
+            </overlay>
+
+          </overlays>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
