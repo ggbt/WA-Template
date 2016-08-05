@@ -9,7 +9,7 @@
   <description>Template used to simplify the development of customisations for oXygen XML Web Author</description>
 
   <properties>
-    <oxygen.sdk.version>18.0-SNAPSHOT</oxygen.sdk.version>
+    <oxygen.sdk.version>18.1-SNAPSHOT</oxygen.sdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -23,10 +23,18 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.oxygenxml</groupId>
+      <artifactId>tomcat-container-webapp-ready-to-go</artifactId>
+      <version>${oxygen.sdk.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
     <plugins>
+
+      <!-- Bring in oxygen-webapp overlay -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -55,6 +63,39 @@
           </overlays>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>com.oxygenxml</groupId>
+              <artifactId>tomcat-container-webapp-ready-to-go</artifactId>
+              <version>${oxygen.sdk.version}</version>
+              <type>war</type>
+              <overWrite>true</overWrite>
+              <outputDirectory>${project.build.directory}/wa-defaults/</outputDirectory>
+              <includes>WEB-INF/plugins.zip,WEB-INF/options.zip,WEB-INF/frameworks.zip</includes>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <configuration>
+          <target>
+            <unzip dir="${project.build.directory}" src="wa-defaults/options.zip" dest="../customisations/options/" />
+            <unzip dir="${project.build.directory}" src="wa-defaults/plugins.zip" dest="../customisations/plugins/" />
+            <unzip dir="${project.build.directory}" src="wa-defaults/frameworks.zip" dest="../customisations/frameworks/" />
+          </target>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
